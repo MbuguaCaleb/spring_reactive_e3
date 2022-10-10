@@ -24,4 +24,5 @@ public class ProductHandler {
     public Mono<ServerResponse> getAll(ServerRequest request){
         return  ok().contentType(MediaType.TEXT_EVENT_STREAM).body(productService.getAll(), Product.class);
     }
+
 }
