@@ -92,4 +92,87 @@ It also implements/is overloaded with the 2 other methods,
 Never Raise Exceptions generally but handle each specifically.
 
 
+(c)onErrorMap
+
+Using onErrorMap i can be able to throw a custom decoupled exception.
+
+This is the best way since MyCode is completely decoupled.
+
+return webClient.get().uri("/products").exchangeToFlux
+(res -> res.bodyToFlux(Product.class))
+//  .onErrorResume(e -> Flux.just(p));
+//  .onErrorResume(WebClientRequestException.class,e -> Flux.just(p));
+// .onErrorResume(e->e.getMessage() == null, e->Flux.just(p));
+// .onErrorReturn(p);
+// .onErrorReturn(WebClientRequestException.class,p)
+//.onErrorReturn(e-> e.getMessage() == null,p)
+.onErrorMap(e -> new ProductRetrieveException(e));
+
+We should learn to decouple our applications i.e the request and the response should not be returned
+at the service but on the controller/handler
+
+Method Overloading,is where we have one method but it is implemented multiple number of times.
+
+(d)OnerrorContinue()
+
+is very useful and is used when i dont want my Process to fail completely/entirely
+
+Maybe one of the thousand events can be Wrong and you do not want your process to completely fail
+
+It skips an abnormal event.
+
+It helps me apply the required Logic in case i experience an error in one of the elements.
+
+
+return webClient.get().uri("/products").exchangeToFlux
+(res -> res.bodyToFlux(Product.class))
+//  .onErrorResume(e -> Flux.just(p));
+//  .onErrorResume(WebClientRequestException.class,e -> Flux.just(p));
+// .onErrorResume(e->e.getMessage() == null, e->Flux.just(p));
+// .onErrorReturn(p);
+//.onErrorReturn(WebClientRequestException.class,p)
+//.onErrorReturn(e-> e.getMessage() == null,p)
+//  .onErrorMap(e -> new ProductRetrieveException(e))
+.doOnNext(n ->{
+if(n.getName() == null) throw  new RuntimeException();
+} )
+.onErrorContinue(((e, o) -> System.out.println(e.getMessage())));
+  
+  
+It is very important when i do not want to interfere with the flow of my Programme.
+  
+  
+(e)Retry
+  
+Incase i want to retry the failed event, this method is at my disposal,
+  
+Finally we have the retry
+
+  webClient.get().uri("/products").exchangeToFlux
+  (res -> res.bodyToFlux(Product.class))
+  //  .onErrorResume(e -> Flux.just(p));
+  //  .onErrorResume(WebClientRequestException.class,e -> Flux.just(p));
+  // .onErrorResume(e->e.getMessage() == null, e->Flux.just(p));
+  // .onErrorReturn(p);
+  //.onErrorReturn(WebClientRequestException.class,p)
+  //.onErrorReturn(e-> e.getMessage() == null,p)
+  //  .onErrorMap(e -> new ProductRetrieveException(e))
+  //               .doOnNext(n ->{
+  //                   if(n.getName() == null) throw  new RuntimeException();
+  //               } )
+  //               .onErrorContinue(((e, o) -> System.out.println(e.getMessage())))
+  //.onErrorContinue(RuntimeException.class,((e, o) -> System.out.println(e.getMessage())))
+  //.onErrorContinue(e->e.getMessage() == null, ((e, o) -> System.out.println(e.getMessage())))
+  .retry()
+  .retry(3);
+
+```
+
+**Exeption Handlers**
+
+```yaml
+
+They are made to decouple how we treat exceptions,
+
+
 ```
