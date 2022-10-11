@@ -176,3 +176,53 @@ They are made to decouple how we treat exceptions,
 
 
 ```
+
+**KEY POINT IN REACTIVE APPLICATIONS**
+
+```yaml
+
+1.We can treat everything as a pipeline of events and that's what we call FLUX.
+
+We do not have to process everything to send it to the one who consumes it.\
+
+In reactive application,It is all about events,
+
+
+(In a normal application/servet i return a list of items and have to wait for everthing
+to be processed this is not the case for reactive applications.
+
+
+(1)Publisher --->Creates the events, Both Mono and Flux are Publishers.
+
+A Mono is a publisher of Only One event,It is always zero or 1.
+
+(Max one event)
+
+A Flux is a publisher of zero or multiple events.
+
+(Indefinite no of events)
+
+
+2.Subscriber.
+
+A Subscriber registers to a publisher and consumes values from a Publisher.
+
+A subscriber asks for the event from the Publisher.
+
+This is called backpressure.
+
+
+3.Subscription
+
+It creates the relationship between the Publisher and the subscriber.
+
+communication between the Publisher and the Subscriber.
+
+Back Pressure is the process where the subscriber listens to the publisher
+and consumes from it and not the other way round.
+
+N/B 
+
+It is not the publisher that sends events to the subscriber
+
+```
